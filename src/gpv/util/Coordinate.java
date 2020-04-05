@@ -71,6 +71,11 @@ public class Coordinate extends Point
 		return this.y;
 	}
 
+	
+	public Coordinate distanceTo() {
+		return makeCoordinate(1,2);
+	}
+	
 	/*
 	 * @see java.lang.Object#hashCode()
 	 */
