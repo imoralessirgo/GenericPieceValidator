@@ -59,6 +59,12 @@ public class Coordinate extends Point {
 		return this.y;
 	}
 
+	
+	/**
+	 * 
+	 * Description
+	 * @return
+	 */
 	public Coordinate distanceTo() {
 		return makeCoordinate(1, 2);
 	}

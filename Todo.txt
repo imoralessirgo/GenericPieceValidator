@@ -1,0 +1,47 @@
+
+________		CoordinateTests		________
+
+distanceTo
+
+horizontalMove:
+	(1,1).distanceTo(1,2) : (0,1)
+ 	(1,8).distanceTo(1,7) : (0,-1)
+ verticalMove:
+ 	(1,1).distanceTo(2,1) : (1,0)
+ 	(8,8).distanceTo(7,8) : (1,0)
+ diagonalMove:
+ 	(1,1).distanceTo(2,2) : (0,1)
+ 	(1,8).distanceTo(1,7) : (0,-1)
+ 
+
+________			ChessTests			________
+canMove
+
+PAWN:
+		WHITE:
+		BLACK:
+	Initial move:
+		WHITE:
+		BLACK:
+	Attack:
+		WHITE:
+		BLACK:	
+KNIGHT:
+		WHITE:
+		BLACK:
+BISHOP:
+		WHITE:
+		BLACK:
+ROOK:
+		WHITE:
+		BLACK:
+QUEEN:
+		WHITE:
+		BLACK:
+KING:
+		WHITE:
+		BLACK:
+
+ROOK & KING:
+		WHITE:
+		BLACK:
