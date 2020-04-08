@@ -98,7 +98,7 @@ public class Coordinate extends Point {
 	 * @return
 	 */
 	public int[] distanceToXY(Coordinate to) {
-		int[] distance = {};
+		int[] distance = {0,0};
 		distance[0] = to.getRow() - this.getRow();
 		distance[1] = to.getColumn() - this.getColumn();
 		return distance;

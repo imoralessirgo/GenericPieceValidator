@@ -9,8 +9,10 @@
 package gpv.util;
 
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Arrays;
 import org.junit.jupiter.api.*;
 import gpv.util.*;
+import static gpv.util.Coordinate.makeCoordinate;
 
 /**
  * Description
@@ -26,12 +28,49 @@ class CoordinateTests {
 	 */
 	@BeforeEach
 	void setUp() throws Exception {
-		// Coordinate to = new Coordinate();
+	}
+
+
+	@Test
+	void hasMovedHorizontalRight() {
+		Coordinate from = makeCoordinate(1,1);
+		Coordinate to = makeCoordinate(1,2);
+		System.out.println(from.distanceToXY(to));
+		assertTrue(Arrays.equals(new int[] {0,1}, from.distanceToXY(to)));
+	}
+	
+	@Test
+	void hasMovedHorizontalLeft() {
+		Coordinate from = makeCoordinate(1,8);
+		Coordinate to = makeCoordinate(1,7);
+		assertTrue(Arrays.equals(new int[] {0,-1}, from.distanceToXY(to)));
+	}
+	
+	@Test
+	void hasMovedVerticalWhite() {
+		Coordinate from = makeCoordinate(1,1);
+		Coordinate to = makeCoordinate(2,1);
+		assertTrue(Arrays.equals(new int[] {1,0}, from.distanceToXY(to)));
+	}
+	
+	@Test
+	void hasMovedVerticalBlack() {
+		Coordinate from = makeCoordinate(8,8);
+		Coordinate to = makeCoordinate(7,8);
+		assertTrue(Arrays.equals(new int[] {-1,0}, from.distanceToXY(to)));
 	}
 
 	@Test
-	void test() {
-		fail("Not yet implemented");
+	void hasMovedDiagonalNE() {
+		Coordinate from = makeCoordinate(1,1);
+		Coordinate to = makeCoordinate(2,2);
+		assertTrue(Arrays.equals(new int[] {1,1}, from.distanceToXY(to)));
 	}
-
+	
+	@Test
+	void hasMovedDiagonalSW() {
+		Coordinate from = makeCoordinate(8,8);
+		Coordinate to = makeCoordinate(7,7);
+		assertTrue(Arrays.equals(new int[] {-1,-1}, from.distanceToXY(to)));
+	}
 }
