@@ -18,8 +18,9 @@ horizontalMove:
  diagonalMove:
  	(1,1).distanceTo(2,2) : [1,1]
  	(8,8).distanceTo(7,7) : [-1,-1]
- 
-
+LMove 
+	(1,1).distanceTo(3,2) : [2,1]
+ 	
 
 
 ________			ChessTests			________
@@ -34,6 +35,10 @@ PAWN:
 	Attack:
 		WHITE:
 		BLACK:	
+		
+		
+		
+		
 KNIGHT:
 		WHITE:
 		BLACK:

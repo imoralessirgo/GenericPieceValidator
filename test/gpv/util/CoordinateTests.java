@@ -35,7 +35,6 @@ class CoordinateTests {
 	void hasMovedHorizontalRight() {
 		Coordinate from = makeCoordinate(1,1);
 		Coordinate to = makeCoordinate(1,2);
-		System.out.println(from.distanceToXY(to));
 		assertTrue(Arrays.equals(new int[] {0,1}, from.distanceToXY(to)));
 	}
 	
@@ -45,7 +44,8 @@ class CoordinateTests {
 		Coordinate to = makeCoordinate(1,7);
 		assertTrue(Arrays.equals(new int[] {0,-1}, from.distanceToXY(to)));
 	}
-	
+
+
 	@Test
 	void hasMovedVerticalWhite() {
 		Coordinate from = makeCoordinate(1,1);
@@ -72,5 +72,12 @@ class CoordinateTests {
 		Coordinate from = makeCoordinate(8,8);
 		Coordinate to = makeCoordinate(7,7);
 		assertTrue(Arrays.equals(new int[] {-1,-1}, from.distanceToXY(to)));
+	}
+	
+	@Test
+	void hasMovedL() {
+		Coordinate from = makeCoordinate(1,1);
+		Coordinate to = makeCoordinate(3,2);
+		assertTrue(Arrays.equals(new int[] {2,1}, from.distanceToXY(to)));
 	}
 }

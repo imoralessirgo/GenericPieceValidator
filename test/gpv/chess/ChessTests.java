@@ -84,6 +84,9 @@ class ChessPieceTests {
 		assertTrue(bq.hasMoved());
 	}
 
+	/** PAWN TESTS **/
+	
+	
 	
 	
 //	@Test
