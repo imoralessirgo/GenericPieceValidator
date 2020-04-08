@@ -14,6 +14,7 @@ package gpv.chess;
 
 import java.util.*;
 import gpv.util.*;
+import static gpv.util.Coordinate.makeCoordinate;
 
 @FunctionalInterface
 interface Rule{
@@ -31,9 +32,15 @@ public class Rules {
 			
 			LinkedList<Rule> pawnRules = new LinkedList<Rule>();
 			Collections.addAll(pawnRules, moveForward1Space, moveForward2Space, moveToAttackPawn);
+			LinkedList<Rule> knightRules = new LinkedList<Rule>();
+			Collections.addAll(knightRules, validLShape);
 			
 			mapOfRules.put(ChessPieceDescriptor.WHITEPAWN, pawnRules);
 			mapOfRules.put(ChessPieceDescriptor.BLACKPAWN, pawnRules);
+			mapOfRules.put(ChessPieceDescriptor.WHITEKNIGHT, knightRules);
+			mapOfRules.put(ChessPieceDescriptor.BLACKKNIGHT, knightRules);
+			mapOfRules.put(ChessPieceDescriptor.WHITEBISHOP, knightRules);
+			mapOfRules.put(ChessPieceDescriptor.BLACKBISHOP, knightRules);
 			
 		}
 	
@@ -42,10 +49,6 @@ public class Rules {
 		}
 	
 		private final HashMap<ChessPieceDescriptor, LinkedList<Rule>> mapOfRules;
-		
-		/**
-		 * UNIVERSAL RULES
-		 */
 		
 		
 		/**
@@ -56,26 +59,102 @@ public class Rules {
 		static Rule moveToAttackPawn = (from, to, b, cp) -> singleSquareDiagonalPawn(to, from, cp)
 																&& b.getPieceAt(to) != null && isEnemyPiece(cp, to, b) ;
 		
-		
 		/**
 		 * KNIGHT SPECIFIC  
 		 */
-		static Rule validLShape = (from, to, b, cp) -> (b.getPieceAt(to) != null || isEnemyPiece(cp, to, b)) 
-																				&& ((from.changeInX(to, cp) == 2 && from.changeInY(to, cp) == 1)
-																						|| (from.changeInX(to, cp) == 1 && from.changeInY(to, cp) == 2));
+		static Rule validLShape = (from, to, b, cp) -> ((Math.abs(from.changeInX(to, cp)) == 2 && from.changeInY(to, cp) == 1)
+																						|| (Math.abs(from.changeInX(to, cp)) == 1 && from.changeInY(to, cp) == 2) 
+																							&& (b.getPieceAt(to) == null || isEnemyPiece(cp, to, b))  );
+		
+		
+		/**
+		 * MULTIPURPOSE RULES
+		 */
+		static Rule validLine = (from, to, b, cp) -> (b.getPieceAt(to) == null || isEnemyPiece(cp, to, b)) && !isPieceInMyWay(to,from,b);
+		
+		
 		
 	
 		// Lambda helper methods
 		private static boolean singleSquareDiagonalPawn(Coordinate to, Coordinate from, ChessPiece cp) {
 			return from.changeInX(to, cp) == 1 && from.changeInY(to, cp) == 1;
-		}	
+		}
+		
 		private static boolean isEnemyPiece(ChessPiece cp, Coordinate to, Board b) {
 			ChessPiece pieceAtDest = (ChessPiece) b.getPieceAt(to);
 			return pieceAtDest.getColor() != cp.getColor();
 		}
+		
 		private static boolean isPieceInMyWay(Coordinate to, Coordinate from, Board b) {
+			int[] distance = from.distanceToXY(to);
+			if(Arrays.asList(distance).contains(0)) { // straigt line
+				if(distance[0] > 0){return checkNorth(from, to, b);} // North
+				else if(distance[0] < 0){return checkSouth(from, to, b);} // South
+				else if(distance[1] > 0){return checkEast(from, to, b);} // East
+				else if(distance[1] < 0){return checkWest(from, to, b);} // West
+			}else if(Math.abs(distance[0]) == Math.abs(distance[1])) { // valid diagonal
+				if(distance[0] > 0 && distance[1] > 0){return checkNorthEast(from, to, b);} // NorthEast
+				else if(distance[0] > 0 && distance[1] < 0){return checkNorthWest(from, to, b);} // NorthWest
+				else if(distance[0] < 0 && distance[1] > 0){return checkSouthEast(from, to, b);} // SouthEast
+				else if(distance[0] < 0 && distance[1] < 0){return checkSouthWest(from, to, b);} // SouthWest
+			}
 			return false;
 		}
 		
-
+		private static boolean checkNorth(Coordinate from, Coordinate to, Board b) {
+			for(int i = from.getRow() + 1; i < to.getRow() - 1; i++) {
+				if(b.getPieceAt(makeCoordinate(i,from.getColumn())) != null) {return true;}
+			}
+			return false;
+		}
+		
+		private static boolean checkSouth(Coordinate from, Coordinate to, Board b) {
+			for(int i = from.getRow() - 1; i > to.getRow() + 1; i--) {
+				if(b.getPieceAt(makeCoordinate(i,from.getColumn())) != null) {return true;}
+			}
+			return false;
+		}		
+		
+		private static boolean checkEast(Coordinate from, Coordinate to, Board b) {
+			for(int i = from.getColumn() + 1; i < to.getColumn() - 1; i++) {
+				if(b.getPieceAt(makeCoordinate(from.getRow(),i)) != null) {return true;}
+			}
+			return false;
+		}
+		
+		private static boolean checkWest(Coordinate from, Coordinate to, Board b) {
+			for(int i = from.getColumn() - 1; i > to.getColumn() + 1; i--) {
+				if(b.getPieceAt(makeCoordinate(from.getRow(),i)) != null) {return true;}
+			}
+			return false;
+		}
+		
+		private static boolean checkNorthEast(Coordinate from, Coordinate to, Board b) {
+			for(int i = from.getRow() + 1, j = from.getColumn() + 1;
+					i < to.getRow() - 1 && j < to.getColumn() - 1; i++, j++) {
+				if(b.getPieceAt(makeCoordinate(i,j)) != null) {return true;}
+			}
+			return false;
+		}
+		private static boolean checkNorthWest(Coordinate from, Coordinate to, Board b) {
+			for(int i = from.getRow() + 1, j = from.getColumn() - 1;
+					i < to.getRow() - 1 && j > to.getColumn() + 1; i++, j--) {
+				if(b.getPieceAt(makeCoordinate(i,j)) != null) {return true;}
+			}
+			return false;
+		}
+		private static boolean checkSouthEast(Coordinate from, Coordinate to, Board b) {
+			for(int i = from.getRow() - 1, j = from.getColumn() + 1;
+					i > to.getRow() + 1 && j < to.getColumn() - 1; i--, j++) {
+				if(b.getPieceAt(makeCoordinate(i,j)) != null) {return true;}
+			}
+			return false;
+		}
+		private static boolean checkSouthWest(Coordinate from, Coordinate to, Board b) {
+			for(int i = from.getRow() - 1, j = from.getColumn() - 1;
+					i > to.getRow() + 1 && j > to.getColumn() + 1; i--, j--) {
+				if(b.getPieceAt(makeCoordinate(i,j)) != null) {return true;}
+			}
+			return false;
+		}
 }
