@@ -10,6 +10,7 @@ package gpv.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import gpv.util.*;
 
 /**
  * Description
@@ -25,6 +26,7 @@ class CoordinateTests {
 	 */
 	@BeforeEach
 	void setUp() throws Exception {
+		// Coordinate to = new Coordinate();
 	}
 
 	@Test

@@ -4,14 +4,14 @@ ________		CoordinateTests		________
 distanceTo
 
 horizontalMove:
-	(1,1).distanceTo(1,2) : (0,1)
- 	(1,8).distanceTo(1,7) : (0,-1)
+	(1,1).distanceTo(1,2) : [0,1]
+ 	(1,8).distanceTo(1,7) : [0,-1]
  verticalMove:
- 	(1,1).distanceTo(2,1) : (1,0)
- 	(8,8).distanceTo(7,8) : (1,0)
+ 	(1,1).distanceTo(2,1) : [1,0]
+ 	(8,8).distanceTo(7,8) : [1,0]
  diagonalMove:
- 	(1,1).distanceTo(2,2) : (0,1)
- 	(1,8).distanceTo(1,7) : (0,-1)
+ 	(1,1).distanceTo(2,2) : [0,1]
+ 	(1,8).distanceTo(1,7) : [0,-1]
  
 
 ________			ChessTests			________

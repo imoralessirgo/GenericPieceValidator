@@ -9,6 +9,7 @@
 package gpv.util;
 
 import java.awt.Point;
+import gpv.chess.*;
 
 /**
  * This class represents a two-dimensional coordinate that would be used in a rectangular
@@ -59,14 +60,48 @@ public class Coordinate extends Point {
 		return this.y;
 	}
 
+
+	/**
+	 * 
+	 * Description
+	 * @return
+	 */
+	public int changeInX(Coordinate to, ChessPiece cp) {
+		int change;
+		if(cp.getColor() == PlayerColor.BLACK) {
+			change = to.getRow() - this.getRow();
+		}else {
+			change = this.getRow() - to.getRow();
+		}
+		return change;
+	}
 	
 	/**
 	 * 
 	 * Description
 	 * @return
 	 */
-	public Coordinate distanceTo() {
-		return makeCoordinate(1, 2);
+	public int changeInY(Coordinate to, ChessPiece cp) {
+		int change;
+		if(cp.getColor() == PlayerColor.BLACK) {
+			change = to.getColumn() - this.getColumn();
+		}else {
+			change = this.getColumn() - to.getColumn();
+		}
+		return change;
+	}
+	
+	
+	/**
+	 * 
+	 * Description
+	 * @return
+	 */
+	public int[] distanceToXY(Coordinate to) {
+		int[] distance = {};
+		distance[0] = to.getRow() - this.getRow();
+		distance[1] = to.getColumn() - this.getColumn();
+		return distance;
 	}
 
 	/*
