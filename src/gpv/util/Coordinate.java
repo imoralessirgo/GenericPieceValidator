@@ -68,7 +68,7 @@ public class Coordinate extends Point {
 	 */
 	public int changeInX(Coordinate to, ChessPiece cp) {
 		int change;
-		if(cp.getColor() == PlayerColor.BLACK) {
+		if(cp.getColor() == PlayerColor.WHITE) {
 			change = to.getRow() - this.getRow();
 		}else {
 			change = this.getRow() - to.getRow();
@@ -83,12 +83,8 @@ public class Coordinate extends Point {
 	 */
 	public int changeInY(Coordinate to, ChessPiece cp) {
 		int change;
-		if(cp.getColor() == PlayerColor.BLACK) {
-			change = to.getColumn() - this.getColumn();
-		}else {
-			change = this.getColumn() - to.getColumn();
-		}
-		return change;
+		change = this.getColumn() - to.getColumn();
+		return Math.abs(change);
 	}
 	
 	

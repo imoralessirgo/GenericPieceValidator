@@ -8,7 +8,6 @@ ________		CoordinateTests		________
 
 
 distanceToXY
-
 horizontalMove:
 	(1,1).distanceTo(1,2) : [0,1]
  	(1,8).distanceTo(1,7) : [0,-1]
@@ -28,20 +27,46 @@ canMove
 
 PAWN:
 		WHITE:
+-		(2,2).canMove(4,2) : False
+-		(2,2).canMove(3,2) : True
+-		(2,2).canMove(1,2) : False
 		BLACK:
+-		(7,2).canMove(5,2) : False
+-		(7,2).canMove(6,2) : True
+-		(7,2).canMove(8,2) : False
 	Initial move:
 		WHITE:
+-		(2,2).canMove(4,2) : True
 		BLACK:
+-		(7,2).canMove(5,2) : True
 	Attack:
 		WHITE:
+-		(2,2).canMove(3,3) : True // with enemy piece
+-		(2,2).canMove(3,1) : True // with enemy piece
+-		(2,2).canMove(1,1) : False 
+-		(2,2).canMove(3,3) : False // no enemy piece 
+		
 		BLACK:	
+-		(7,2).canMove(6,3) : True // with enemy piece
+-		(7,2).canMove(6,1) : True // with enemy piece
+-		(7,2).canMove(8,1) : False 
+-		(7,2).canMove(6,3) : False // no enemy piece 
 		
 		
 		
 		
 KNIGHT:
 		WHITE:
+		(1,2).canMove(3,3) : True
+		(4,3).canMove(2,4) : True
+		(1,2).canMove(2,4) : True
+		(2,2).canMove(2,4) : False // white piece at dest
 		BLACK:
+		(8,2).canMove(6,1) : True
+		(4,6).canMove(6,5) : True
+		(8,2).canMove(7,4) : True
+		(8,2).canMove(2,4) : False // black piece at dest
+		
 BISHOP:
 		WHITE:
 		BLACK:

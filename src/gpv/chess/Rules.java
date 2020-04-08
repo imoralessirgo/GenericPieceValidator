@@ -12,6 +12,7 @@
 
 package gpv.chess;
 
+import java.util.*;
 import gpv.util.*;
 
 @FunctionalInterface
@@ -24,36 +25,55 @@ interface Rule{
  * @version Apr 6, 2020
  */
 public class Rules {
+		
+		public Rules() {
+			this.mapOfRules = new HashMap<ChessPieceDescriptor, LinkedList<Rule>>();
+			
+			LinkedList<Rule> pawnRules = new LinkedList<Rule>();
+			Collections.addAll(pawnRules, moveForward1Space, moveForward2Space, moveToAttackPawn);
+			
+			mapOfRules.put(ChessPieceDescriptor.WHITEPAWN, pawnRules);
+			mapOfRules.put(ChessPieceDescriptor.BLACKPAWN, pawnRules);
+			
+		}
 	
+		public HashMap<ChessPieceDescriptor, LinkedList<Rule>> getRules(){
+			return this.mapOfRules;
+		}
+	
+		private final HashMap<ChessPieceDescriptor, LinkedList<Rule>> mapOfRules;
+		
 		/**
-		 * WHITE PAWN SPECIFIC
+		 * UNIVERSAL RULES
 		 */
-		static Rule moveForward1SpaceWhite = (from, to, b, cp) ->  from.distanceToXY(to) == new int[] {1,0}; 
-		static Rule moveForward2SpaceWhite = (from, to, b, cp) -> from.distanceToXY(to) == new int[] {2,0} && !cp.hasMoved();
-		static Rule moveToAttackWhitePawn = (from, to, b, cp) -> singleSquareDiagonalWhitePawn(to, from) && b.getPieceAt(to) == null ;
-
+		
+		
 		/**
-		 * BLACK PAWN SPECIFIC
+		 * PAWN SPECIFIC
 		 */
-		static Rule moveForward1SpaceBlack = (from, to, b, cp) ->  from.distanceToXY(to) == new int[] {-1,0} && b.getPieceAt(to) == null; 
-		static Rule moveForward2SpaceBlack = (from, to, b, cp) -> from.distanceToXY(to) == new int[] {-2,0} && !cp.hasMoved() && b.getPieceAt(to) == null;		
-		static Rule moveToAttackBlackPawn = (from, to, b, cp) -> singleSquareDiagonalBlackPawn(to, from) && b.getPieceAt(to) == null ;
-
+		static Rule moveForward1Space = (from, to, b, cp) ->  from.changeInX(to, cp) == 1 && from.changeInY(to, cp) == 0; 
+		static Rule moveForward2Space = (from, to, b, cp) -> from.changeInX(to, cp) == 2 && from.changeInY(to, cp) == 0 && !cp.hasMoved();
+		static Rule moveToAttackPawn = (from, to, b, cp) -> singleSquareDiagonalPawn(to, from, cp)
+																&& b.getPieceAt(to) != null && isEnemyPiece(cp, to, b) ;
+		
+		
+		/**
+		 * KNIGHT SPECIFIC  
+		 */
+		static Rule validLShape = (from, to, b, cp) -> (b.getPieceAt(to) != null || isEnemyPiece(cp, to, b)) 
+																				&& ((from.changeInX(to, cp) == 2 && from.changeInY(to, cp) == 1)
+																						|| (from.changeInX(to, cp) == 1 && from.changeInY(to, cp) == 2));
+		
 	
 		// Lambda helper methods
-		private static boolean singleSquareDiagonalWhitePawn(Coordinate to, Coordinate from) {
-			int[] result = from.distanceToXY(to);
-			if(result[0] == 1 && Math.abs(result[1]) == 1) {
-				return true;
-			}
-			return false;
+		private static boolean singleSquareDiagonalPawn(Coordinate to, Coordinate from, ChessPiece cp) {
+			return from.changeInX(to, cp) == 1 && from.changeInY(to, cp) == 1;
+		}	
+		private static boolean isEnemyPiece(ChessPiece cp, Coordinate to, Board b) {
+			ChessPiece pieceAtDest = (ChessPiece) b.getPieceAt(to);
+			return pieceAtDest.getColor() != cp.getColor();
 		}
-		
-		private static boolean singleSquareDiagonalBlackPawn(Coordinate to, Coordinate from) {
-			int[] result = from.distanceToXY(to);
-			if(result[0] == -1 && Math.abs(result[1]) == 1) {
-				return true;
-			}
+		private static boolean isPieceInMyWay(Coordinate to, Coordinate from, Board b) {
 			return false;
 		}
 		

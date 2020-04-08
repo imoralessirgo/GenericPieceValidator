@@ -10,11 +10,12 @@ package gpv.chess;
 
 import static gpv.chess.ChessPieceDescriptor.*;
 import static org.junit.Assert.*;
+import java.util.stream.Stream;
 import static gpv.util.Coordinate.makeCoordinate;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import gpv.util.Board;
+import org.junit.jupiter.params.provider.*;
+import gpv.util.*;
 
 /**
  * Tests to ensure that pieces are created correctly and that all pieces get created.
@@ -85,9 +86,99 @@ class ChessPieceTests {
 	}
 
 	/** PAWN TESTS **/
+
+	@ParameterizedTest
+	@MethodSource("pawnPassProvider")
+	void pawnTrueMove(
+			Coordinate wfrom, Coordinate wto,
+			Coordinate bfrom, Coordinate bto) {
+		ChessPiece wp = factory.makePiece(WHITEPAWN);
+		ChessPiece bp = factory.makePiece(BLACKPAWN);
+		assertTrue(wp.canMove(wfrom, wto, board));
+		assertTrue(bp.canMove(bfrom, bto, board));
+	}
+	
+	static Stream<Arguments> pawnPassProvider() {
+		return Stream.of(
+				Arguments.of(makeCoordinate(2,2), makeCoordinate(3,2),
+						makeCoordinate(7,2), makeCoordinate(6,2)),
+				Arguments.of(makeCoordinate(2,2), makeCoordinate(4,2),
+						makeCoordinate(7,2), makeCoordinate(5,2))
+				);
+	}
+
+	@ParameterizedTest
+	@MethodSource("pawnFailProvider")
+	void pawnFalseMove(
+			Coordinate wfrom, Coordinate wto,
+			Coordinate bfrom, Coordinate bto) {
+		ChessPiece wp = factory.makePiece(WHITEPAWN);
+		C// no movement not validhessPiece bp = factory.makePiece(BLACKPAWN);
+		wp.setHasMoved();
+		bp.setHasMoved();
+		assertFalse(wp.canMove(wfrom, wto, board));
+		assertFalse(bp.canMove(bfrom, bto, board));
+	}
+	
+	static Stream<Arguments> pawnFailProvider() {
+		return Stream.of(
+				Arguments.of(makeCoordinate(2,2), makeCoordinate(4,2),
+						makeCoordinate(7,2), makeCoordinate(5,2)),
+				Arguments.of(makeCoordinate(2,2), makeCoordinate(1,2),
+						makeCoordinate(7,2), makeCoordinate(8,2)),
+				Arguments.of(makeCoordinate(2,2), makeCoordinate(1,1),
+						makeCoordinate(7,2), makeCoordinate(8,1)),
+				Arguments.of(makeCoordinate(2,2), makeCoordinate(3,3),
+						makeCoordinate(7,2), makeCoordinate(6,3))
+				);	
+	}
+	
+	@ParameterizedTest
+	@MethodSource("pawnAttackProvider")
+	void pawnTrueSingleMove(
+			Coordinate wfrom, Coordinate wto,
+			Coordinate bfrom, Coordinate bto) {
+		ChessPiece wp = factory.makePiece(WHITEPAWN);
+		ChessPiece bp = factory.makePiece(BLACKPAWN);
+		board.putPieceAt(factory.makePiece(BLACKPAWN), wto);
+		board.putPieceAt(factory.makePiece(WHITEPAWN), bto);
+		assertTrue(wp.canMove(wfrom, wto, board));
+		assertTrue(bp.canMove(bfrom, bto, board));
+	}
+	
+	static Stream<Arguments> pawnAttackProvider() {
+		return Stream.of(
+				Arguments.of(makeCoordinate(2,2), makeCoordinate(3,3),
+						makeCoordinate(7,2), makeCoordinate(6,3)),
+				Arguments.of(makeCoordinate(2,2), makeCoordinate(3,1),
+						makeCoordinate(7,2), makeCoordinate(6,1))
+				);
+	}
 	
 	
+	/** Knight Tests **/
+	@ParameterizedTest
+	@MethodSource("knightPassProvider")
+	void knightTrueMove(
+			Coordinate wfrom, Coordinate wto,
+			Coordinate bfrom, Coordinate bto) {
+		ChessPiece wp = factory.makePiece(WHITEKNIGHT);
+		ChessPiece bp = factory.makePiece(BLACKKNIGHT);
+		assertTrue(wp.canMove(wfrom, wto, board));
+		assertTrue(bp.canMove(bfrom, bto, board));
+	}
 	
+	static Stream<Arguments> knightPassProvider() {
+		return Stream.of(
+				Arguments.of(makeCoordinate(1,2), makeCoordinate(3,3),
+						makeCoordinate(8,2), makeCoordinate(6,1)),
+				Arguments.of(makeCoordinate(4,3), makeCoordinate(2,4),
+						makeCoordinate(4,6), makeCoordinate(6,5)),
+				Arguments.of(makeCoordinate(1,2), makeCoordinate(2,4),
+						makeCoordinate(8,2), makeCoordinate(7,4))
+				);
+	}
+
 	
 //	@Test
 //	void thisShouldFailOnDelivery() {

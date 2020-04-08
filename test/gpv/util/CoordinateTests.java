@@ -68,7 +68,7 @@ class CoordinateTests {
 	}
 	
 	@Test
-	void hasMovedDiagonalSW() {
+	void hasMovedDiagonalSW() {// no movement not valid
 		Coordinate from = makeCoordinate(8,8);
 		Coordinate to = makeCoordinate(7,7);
 		assertTrue(Arrays.equals(new int[] {-1,-1}, from.distanceToXY(to)));
