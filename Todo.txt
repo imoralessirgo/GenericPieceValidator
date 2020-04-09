@@ -98,19 +98,35 @@ ROOK:
 
 QUEEN:
 		WHITE:
-		(1,3).canMove(4,6) : True
-		(1,8).canMove(8,8) : True	
-		(7,7).canMove(7,6) : True	
+-		(1,3).canMove(4,6) : True
+-		(1,8).canMove(8,8) : True	
+-		(7,7).canMove(7,6) : True	
 		BLACK:
-		(8,3).canMove(5,6) : True
-		(1,8).canMove(1,1) : True
-		(2,2).canMove(3,2) : True
+-		(8,3).canMove(5,6) : True
+-		(1,8).canMove(1,1) : True
+-		(2,2).canMove(3,2) : True
 		
 KING:
 		WHITE:
-		
+-		(1,2).canMove(4,2) : False
+-		(2,2).canMove(3,2) : True		
 		BLACK:
+-		(8,2).canMove(4,4) : False
+-		(6,2).canMove(6,1) : True	
 
 ROOK & KING:
 		WHITE:
+		(1,5).canMove(1,7) : True
+		(1,5).canMove(1,3) : True
+		(1,5).canMove(1,3) : False // rook at position but not first move
+		(1,5).canMove(1,3) : False // no rook at position
+		(1,5).canMove(1,7) : False // not first move
+		
 		BLACK:
+		
+		(8,5).canMove(8,7) : True
+		(8,5).canMove(8,3) : True
+		(8,5).canMove(8,3) : False // rook at position but not first move
+		(8,5).canMove(8,3) : False // no rook at position
+		(8,5).canMove(8,7) : False // not first move
+		

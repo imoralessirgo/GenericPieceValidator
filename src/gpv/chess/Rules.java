@@ -90,7 +90,6 @@ public class Rules {
 																				|| (from.changeInX(to, cp) == -1 && (from.changeInY(to, cp) == 0 || from.changeInY(to, cp) == 1))
 																					|| (from.changeInX(to, cp) == -1 && (from.changeInY(to, cp) == 0 || from.changeInY(to, cp) == 1));
 		
-		
 		/**
 		 * MULTIPURPOSE RULES
 		 */
@@ -143,7 +142,6 @@ public class Rules {
 		}
 		
 		private static boolean checkSouth(Coordinate from, Coordinate to, Board b) {
-			System.out.println("here");
 			for(int i = from.getRow() - 1; i > to.getRow() + 1; i--) {
 				if(b.getPieceAt(makeCoordinate(i,from.getColumn())) != null) {return true;}
 			}

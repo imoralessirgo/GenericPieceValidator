@@ -60,25 +60,24 @@ public class Coordinate extends Point {
 		return this.y;
 	}
 
-
 	/**
-	 * 
 	 * Description
+	 * 
 	 * @return
 	 */
 	public int changeInX(Coordinate to, ChessPiece cp) {
 		int change;
-		if(cp.getColor() == PlayerColor.WHITE) {
+		if (cp.getColor() == PlayerColor.WHITE) {
 			change = to.getRow() - this.getRow();
-		}else {
+		} else {
 			change = this.getRow() - to.getRow();
 		}
 		return change;
 	}
-	
+
 	/**
-	 * 
 	 * Description
+	 * 
 	 * @return
 	 */
 	public int changeInY(Coordinate to, ChessPiece cp) {
@@ -86,15 +85,16 @@ public class Coordinate extends Point {
 		change = this.getColumn() - to.getColumn();
 		return Math.abs(change);
 	}
-	
-	
+
 	/**
-	 * 
 	 * Description
+	 * 
 	 * @return
 	 */
 	public int[] distanceToXY(Coordinate to) {
-		int[] distance = {0,0};
+		int[] distance = {
+				0, 0
+		};
 		distance[0] = to.getRow() - this.getRow();
 		distance[1] = to.getColumn() - this.getColumn();
 		return distance;

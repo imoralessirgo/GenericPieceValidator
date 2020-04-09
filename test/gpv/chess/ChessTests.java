@@ -301,7 +301,46 @@ class ChessPieceTests {
 	
 	
 	/** King Tests **/
+	@ParameterizedTest
+	@MethodSource("kingPassProvider")
+	void kingTrueMove(
+			Coordinate wfrom, Coordinate wto,
+			Coordinate bfrom, Coordinate bto) {
+		ChessPiece wk = factory.makePiece(WHITEQUEEN);
+		ChessPiece bk = factory.makePiece(BLACKQUEEN);
+		board.putPieceAt(factory.makePiece(BLACKROOK), wto);
+		board.putPieceAt(factory.makePiece(WHITEROOK), bto);
+		assertTrue(wk.canMove(wfrom, wto, board));
+		assertTrue(bk.canMove(bfrom, bto, board));
+	}
 	
+	static Stream<Arguments> kingPassProvider() {
+		return Stream.of(
+				Arguments.of(makeCoordinate(2,2), makeCoordinate(3,2),
+						makeCoordinate(6,2), makeCoordinate(6,1))
+				);
+	}
+
+	@ParameterizedTest
+	@MethodSource("kingFailProvider")
+	void kingFalseMove(
+			Coordinate wfrom, Coordinate wto,
+			Coordinate bfrom, Coordinate bto) {
+		ChessPiece wk = factory.makePiece(WHITEKING);
+		ChessPiece bk = factory.makePiece(BLACKKING);
+		board.putPieceAt(factory.makePiece(BLACKROOK), bto);
+		board.putPieceAt(factory.makePiece(WHITEROOK), wto);
+		assertFalse(wk.canMove(wfrom, wto, board));
+		assertFalse(bk.canMove(bfrom, bto, board));
+	}
+	
+	static Stream<Arguments> kingFailProvider() {
+		return Stream.of(
+				Arguments.of(makeCoordinate(1,2), makeCoordinate(4,2),
+						makeCoordinate(8,2), makeCoordinate(4,4))
+				);
+	}
+
 	
 	/** Queen Tests **/
 	@ParameterizedTest
@@ -329,10 +368,52 @@ class ChessPieceTests {
 	}
 	
 	/** Castling Tests **/
+	@Test
+	void canCastleWhite() {
+		ChessPiece wk = factory.makePiece(WHITEKING);
+		board.putPieceAt(factory.makePiece(WHITEROOK), makeCoordinate(1,1));
+		assertTrue(wk.canMove(makeCoordinate(1,5),makeCoordinate(1,3), board));
+		wk = factory.makePiece(WHITEKING);
+		board.putPieceAt(factory.makePiece(WHITEROOK), makeCoordinate(1,8));
+		assertTrue(wk.canMove(makeCoordinate(1,5),makeCoordinate(1,7), board));
+	}
 	
+	@Test
+	void canNotCastleWhite() {
+		ChessPiece wk = factory.makePiece(WHITEKING);
+		ChessPiece wr = factory.makePiece(WHITEROOK);
+		assertFalse(wk.canMove(makeCoordinate(1,5),makeCoordinate(1,3), board));
+		wr.setHasMoved();
+		board.putPieceAt(factory.makePiece(WHITEROOK), makeCoordinate(1,1));
+		assertFalse(wk.canMove(makeCoordinate(1,5),makeCoordinate(1,3), board));
+		wk.setHasMoved();
+		board.putPieceAt(factory.makePiece(WHITEROOK), makeCoordinate(1,8));
+		assertFalse(wk.canMove(makeCoordinate(1,5),makeCoordinate(1,7), board));
+	}
 	
+	@Test
+	void canCastleBlack() {
+		ChessPiece wk = factory.makePiece(BLACKKING);
+		board.putPieceAt(factory.makePiece(BLACKROOK), makeCoordinate(8,1));
+		assertTrue(wk.canMove(makeCoordinate(8,5),makeCoordinate(8,3), board));
+		wk = factory.makePiece(BLACKKING);
+		board.putPieceAt(factory.makePiece(BLACKROOK), makeCoordinate(8,8));
+		assertTrue(wk.canMove(makeCoordinate(8,5),makeCoordinate(8,7), board));
+	}
 	
-
+	@Test
+	void canNotCastleBlack() {
+		ChessPiece bk = factory.makePiece(BLACKKING);
+		ChessPiece br = factory.makePiece(BLACKROOK);
+		assertFalse(bk.canMove(makeCoordinate(1,5),makeCoordinate(8,3), board));
+		br.setHasMoved();
+		board.putPieceAt(factory.makePiece(BLACKROOK), makeCoordinate(8,1));
+		assertFalse(bk.canMove(makeCoordinate(8,5),makeCoordinate(8,3), board));
+		bk.setHasMoved();
+		board.putPieceAt(factory.makePiece(BLACKROOK), makeCoordinate(8,8));
+		assertFalse(bk.canMove(makeCoordinate(8,5),makeCoordinate(8,7), board));
+	}
+	
 	
 //	@Test
 //	void thisShouldFailOnDelivery() {
