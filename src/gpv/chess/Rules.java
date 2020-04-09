@@ -41,7 +41,7 @@ public class Rules {
 			LinkedList<Rule> queenRules = new LinkedList<Rule>();
 			Collections.addAll(queenRules, validStraightLine, validDiagonalLine);
 			LinkedList<Rule> kingRules = new LinkedList<Rule>();
-			Collections.addAll(kingRules, validStraightLine, validDiagonalLine);
+			Collections.addAll(kingRules, move1Space);
 			
 			
 			
@@ -81,6 +81,14 @@ public class Rules {
 		static Rule validLShape = (from, to, b, cp) -> ((Math.abs(from.changeInX(to, cp)) == 2 && from.changeInY(to, cp) == 1)
 																						|| (Math.abs(from.changeInX(to, cp)) == 1 && from.changeInY(to, cp) == 2) 
 																							&& (b.getPieceAt(to) == null || isEnemyPiece(cp, to, b))  );
+		
+		/**
+		 * KING SPECIFIC  
+		 */
+		static Rule move1Space = (from, to, b, cp) ->(b.getPieceAt(to) == null || isEnemyPiece(cp, to, b)) &&  
+																			(from.changeInX(to, cp) == 1 && (from.changeInY(to, cp) == 0 || from.changeInY(to, cp) == 1))
+																				|| (from.changeInX(to, cp) == -1 && (from.changeInY(to, cp) == 0 || from.changeInY(to, cp) == 1))
+																					|| (from.changeInX(to, cp) == -1 && (from.changeInY(to, cp) == 0 || from.changeInY(to, cp) == 1));
 		
 		
 		/**

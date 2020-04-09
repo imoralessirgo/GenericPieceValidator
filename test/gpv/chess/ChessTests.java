@@ -301,7 +301,33 @@ class ChessPieceTests {
 	
 	
 	/** King Tests **/
+	
+	
 	/** Queen Tests **/
+	@ParameterizedTest
+	@MethodSource("queenPassProvider")
+	void queenTrueMove(
+			Coordinate wfrom, Coordinate wto,
+			Coordinate bfrom, Coordinate bto) {
+		ChessPiece wq = factory.makePiece(WHITEQUEEN);
+		ChessPiece bq = factory.makePiece(BLACKQUEEN);
+		board.putPieceAt(factory.makePiece(BLACKROOK), wto);
+		board.putPieceAt(factory.makePiece(WHITEROOK), bto);
+		assertTrue(wq.canMove(wfrom, wto, board));
+		assertTrue(bq.canMove(bfrom, bto, board));
+	}
+	
+	static Stream<Arguments> queenPassProvider() {
+		return Stream.of(
+				Arguments.of(makeCoordinate(1,3), makeCoordinate(4,6),
+						makeCoordinate(8,6), makeCoordinate(5,6)),
+				Arguments.of(makeCoordinate(7,7), makeCoordinate(7,6),
+						makeCoordinate(2,2), makeCoordinate(3,2)),
+				Arguments.of(makeCoordinate(2,8), makeCoordinate(8,8),
+						makeCoordinate(1,8), makeCoordinate(1,1))
+				);
+	}
+	
 	/** Castling Tests **/
 	
 	
