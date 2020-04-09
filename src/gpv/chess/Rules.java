@@ -40,8 +40,10 @@ public class Rules {
 			Collections.addAll(rookRules, validStraightLine);
 			LinkedList<Rule> queenRules = new LinkedList<Rule>();
 			Collections.addAll(queenRules, validStraightLine, validDiagonalLine);
-			LinkedList<Rule> kingRules = new LinkedList<Rule>();
-			Collections.addAll(kingRules, move1Space);
+			LinkedList<Rule> whiteKingRules = new LinkedList<Rule>();
+			Collections.addAll(whiteKingRules, move1Space, whiteKingCastling);
+			LinkedList<Rule> blackKingRules = new LinkedList<Rule>();
+			Collections.addAll(blackKingRules, move1Space, blackKingCastling);
 			
 			
 			
@@ -55,8 +57,8 @@ public class Rules {
 			mapOfRules.put(ChessPieceDescriptor.BLACKROOK, rookRules);
 			mapOfRules.put(ChessPieceDescriptor.WHITEQUEEN, queenRules);
 			mapOfRules.put(ChessPieceDescriptor.BLACKQUEEN, queenRules);
-			mapOfRules.put(ChessPieceDescriptor.WHITEKING, kingRules);
-			mapOfRules.put(ChessPieceDescriptor.BLACKKING, kingRules);
+			mapOfRules.put(ChessPieceDescriptor.WHITEKING, whiteKingRules);
+			mapOfRules.put(ChessPieceDescriptor.BLACKKING, blackKingRules);
 		}
 	
 		public HashMap<ChessPieceDescriptor, LinkedList<Rule>> getRules(){
@@ -70,8 +72,10 @@ public class Rules {
 		 * PAWN SPECIFIC
 		 */
 		static Rule moveForward1Space = (from, to, b, cp) ->  from.changeInX(to, cp) == 1 && from.changeInY(to, cp) == 0; 
+		
 		static Rule moveForward2Space = (from, to, b, cp) -> from.changeInX(to, cp) == 2 && from.changeInY(to, cp) == 0 
 																								&& !cp.hasMoved() && !isPieceInMyWayStraight(to, from, b);
+		
 		static Rule moveToAttackPawn = (from, to, b, cp) -> singleSquareDiagonalPawn(to, from, cp)
 																&& b.getPieceAt(to) != null && isEnemyPiece(cp, to, b) ;
 		
@@ -90,10 +94,20 @@ public class Rules {
 																				|| (from.changeInX(to, cp) == -1 && (from.changeInY(to, cp) == 0 || from.changeInY(to, cp) == 1))
 																					|| (from.changeInX(to, cp) == -1 && (from.changeInY(to, cp) == 0 || from.changeInY(to, cp) == 1));
 		
+		static Rule whiteKingCastling = (from, to, b, cp) -> !cp.hasMoved() &&
+				((to.getRow() == 1 && to.getColumn() == 3 && !isPieceInMyWayStraight(makeCoordinate(1,1), from, b)  && checkRook(1,1, cp.getColor(), b))
+				|| (to.getRow() == 1 && to.getColumn() == 7 && !isPieceInMyWayStraight(makeCoordinate(1,8), from, b)  && checkRook(1,8, cp.getColor(), b)));
+		
+		static Rule blackKingCastling = (from, to, b, cp) -> !cp.hasMoved() &&
+				((to.getRow() == 8 && to.getColumn() == 3 && !isPieceInMyWayStraight(makeCoordinate(8,1), from, b)  && checkRook(8,1, cp.getColor(), b))
+				|| (to.getRow() == 8 && to.getColumn() == 7 && !isPieceInMyWayStraight(makeCoordinate(8,8), from, b)  && checkRook(8,8, cp.getColor(), b)));
+		
+		
 		/**
 		 * MULTIPURPOSE RULES
 		 */
 		static Rule validDiagonalLine = (from, to, b, cp) -> (b.getPieceAt(to) == null || isEnemyPiece(cp, to, b)) && !isPieceInMyWayDiagonal(to,from,b);
+		
 		static Rule validStraightLine = (from, to, b, cp) -> (b.getPieceAt(to) == null || isEnemyPiece(cp, to, b)) && !isPieceInMyWayStraight(to,from,b);
 		
 		
@@ -189,5 +203,11 @@ public class Rules {
 				if(b.getPieceAt(makeCoordinate(i,j)) != null) {return true;}
 			}
 			return false;
+		}
+		
+		private static boolean checkRook(int x, int y, PlayerColor c, Board b) {
+			if(b.getPieceAt(makeCoordinate(x,y)) == null) {return false;}
+			ChessPiece rook = (ChessPiece) b.getPieceAt(makeCoordinate(x,y));
+			return rook.getColor() == c && !rook.hasMoved();
 		}
 }

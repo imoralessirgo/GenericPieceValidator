@@ -3,8 +3,23 @@ ________		CoordinateTests		________
 
 
  changeInX
+whitepawn
+(2,2).changeinX(1,2) : -1
+(2,2).changeinX(3,2) : 1
+
+blackpawn 
+(7,2).changeinX(8,2) : -1
+(7,2).changeinX(6,2) : 1
  
- changeInY
+ 
+changeInY
+whitepawn
+(2,2).changeinX(2,3) : 1
+(2,2).changeinX(2,1) : 1
+
+blackpawn 
+(7,2).changeinX(7,3) : 1
+(7,2).changeinX(7,1) : 1
 
 
 distanceToXY

@@ -11,7 +11,7 @@ package gpv.util;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
 import org.junit.jupiter.api.*;
-import gpv.util.*;
+import gpv.chess.*;
 import static gpv.util.Coordinate.makeCoordinate;
 
 /**
@@ -21,15 +21,13 @@ import static gpv.util.Coordinate.makeCoordinate;
  */
 class CoordinateTests {
 
-	/**
-	 * Description
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@BeforeEach
-	void setUp() throws Exception {
+	private static ChessPieceFactory factory = null;
+	
+	@BeforeAll
+	public static void setupBeforeTests() {
+		factory = new ChessPieceFactory();
 	}
-
+	
 
 	@Test
 	void hasMovedHorizontalRight() {
@@ -80,4 +78,28 @@ class CoordinateTests {
 		Coordinate to = makeCoordinate(3,2);
 		assertTrue(Arrays.equals(new int[] {2,1}, from.distanceToXY(to)));
 	}
+	
+	@Test
+	void wpChangeInXY() {
+		ChessPiece wp = factory.makePiece(ChessPieceDescriptor.WHITEPAWN);
+		Coordinate from = makeCoordinate(2,2);
+		
+		assertEquals(from.changeInX(makeCoordinate(1,2),wp), -1);
+		assertEquals(from.changeInX(makeCoordinate(3,2),wp), 1);
+		assertEquals(from.changeInY(makeCoordinate(2,3),wp), 1);
+		assertEquals(from.changeInY(makeCoordinate(2,1),wp), 1);	
+	}
+	
+	@Test
+	void bpChangeInXY() {
+		ChessPiece wp = factory.makePiece(ChessPieceDescriptor.BLACKPAWN);
+		Coordinate from = makeCoordinate(7,2);
+		
+		assertEquals(from.changeInX(makeCoordinate(8,2),wp), -1);
+		assertEquals(from.changeInX(makeCoordinate(6,2),wp), 1);
+		assertEquals(from.changeInY(makeCoordinate(7,3),wp), 1);
+		assertEquals(from.changeInY(makeCoordinate(7,1),wp), 1);	
+	}
+		
+	
 }

@@ -384,7 +384,7 @@ class ChessPieceTests {
 		ChessPiece wr = factory.makePiece(WHITEROOK);
 		assertFalse(wk.canMove(makeCoordinate(1,5),makeCoordinate(1,3), board));
 		wr.setHasMoved();
-		board.putPieceAt(factory.makePiece(WHITEROOK), makeCoordinate(1,1));
+		board.putPieceAt(wr, makeCoordinate(1,1));
 		assertFalse(wk.canMove(makeCoordinate(1,5),makeCoordinate(1,3), board));
 		wk.setHasMoved();
 		board.putPieceAt(factory.makePiece(WHITEROOK), makeCoordinate(1,8));
@@ -407,7 +407,7 @@ class ChessPieceTests {
 		ChessPiece br = factory.makePiece(BLACKROOK);
 		assertFalse(bk.canMove(makeCoordinate(1,5),makeCoordinate(8,3), board));
 		br.setHasMoved();
-		board.putPieceAt(factory.makePiece(BLACKROOK), makeCoordinate(8,1));
+		board.putPieceAt(br, makeCoordinate(8,1));
 		assertFalse(bk.canMove(makeCoordinate(8,5),makeCoordinate(8,3), board));
 		bk.setHasMoved();
 		board.putPieceAt(factory.makePiece(BLACKROOK), makeCoordinate(8,8));
@@ -415,11 +415,11 @@ class ChessPieceTests {
 	}
 	
 	
-//	@Test
-//	void thisShouldFailOnDelivery() {
-//		ChessPiece wk = factory.makePiece(WHITEKING);
-//		board.putPieceAt(wk, makeCoordinate(1, 5));
-//		assertTrue(wk.canMove(makeCoordinate(1, 5), makeCoordinate(2, 5), board));
-//	}
+	@Test
+	void thisShouldFailOnDelivery() {
+		ChessPiece wk = factory.makePiece(WHITEKING);
+		board.putPieceAt(wk, makeCoordinate(1, 5));
+		assertTrue(wk.canMove(makeCoordinate(1, 5), makeCoordinate(2, 5), board));
+	}
 
 }
