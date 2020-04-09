@@ -162,12 +162,12 @@ class ChessPieceTests {
 	void knightTrueMove(
 			Coordinate wfrom, Coordinate wto,
 			Coordinate bfrom, Coordinate bto) {
-		ChessPiece wp = factory.makePiece(WHITEKNIGHT);
-		ChessPiece bp = factory.makePiece(BLACKKNIGHT);
+		ChessPiece wk = factory.makePiece(WHITEKNIGHT);
+		ChessPiece bk = factory.makePiece(BLACKKNIGHT);
 		board.putPieceAt(factory.makePiece(BLACKKNIGHT), wto);
 		board.putPieceAt(factory.makePiece(WHITEKNIGHT), bto);
-		assertTrue(wp.canMove(wfrom, wto, board));
-		assertTrue(bp.canMove(bfrom, bto, board));
+		assertTrue(wk.canMove(wfrom, wto, board));
+		assertTrue(bk.canMove(bfrom, bto, board));
 	}
 	
 	static Stream<Arguments> knightPassProvider() {
@@ -186,12 +186,12 @@ class ChessPieceTests {
 	void knightFalseMove(
 			Coordinate wfrom, Coordinate wto,
 			Coordinate bfrom, Coordinate bto) {
-		ChessPiece wp = factory.makePiece(WHITEKNIGHT);
-		ChessPiece bp = factory.makePiece(BLACKKNIGHT);
+		ChessPiece wk = factory.makePiece(WHITEKNIGHT);
+		ChessPiece bk = factory.makePiece(BLACKKNIGHT);
 		board.putPieceAt(factory.makePiece(BLACKKNIGHT), bto);
 		board.putPieceAt(factory.makePiece(WHITEKNIGHT), wto);
-		assertFalse(wp.canMove(wfrom, wto, board));
-		assertFalse(bp.canMove(bfrom, bto, board));
+		assertFalse(wk.canMove(wfrom, wto, board));
+		assertFalse(bk.canMove(bfrom, bto, board));
 	}
 	
 	static Stream<Arguments> knightFailProvider() {
@@ -209,22 +209,20 @@ class ChessPieceTests {
 	void bishopTrueMove(
 			Coordinate wfrom, Coordinate wto,
 			Coordinate bfrom, Coordinate bto) {
-		ChessPiece wp = factory.makePiece(WHITEKNIGHT);
-		ChessPiece bp = factory.makePiece(BLACKKNIGHT);
-		board.putPieceAt(factory.makePiece(BLACKKNIGHT), wto);
-		board.putPieceAt(factory.makePiece(WHITEKNIGHT), bto);
-		assertTrue(wp.canMove(wfrom, wto, board));
-		assertTrue(bp.canMove(bfrom, bto, board));
+		ChessPiece wb = factory.makePiece(WHITEBISHOP);
+		ChessPiece bb = factory.makePiece(BLACKBISHOP);
+		board.putPieceAt(factory.makePiece(BLACKBISHOP), wto);
+		board.putPieceAt(factory.makePiece(WHITEBISHOP), bto);
+		assertTrue(wb.canMove(wfrom, wto, board));
+		assertTrue(bb.canMove(bfrom, bto, board));
 	}
 	
 	static Stream<Arguments> bishopPassProvider() {
 		return Stream.of(
-				Arguments.of(makeCoordinate(1,2), makeCoordinate(3,3),
-						makeCoordinate(8,2), makeCoordinate(6,1)),
-				Arguments.of(makeCoordinate(4,3), makeCoordinate(2,4),
-						makeCoordinate(4,6), makeCoordinate(6,5)),
-				Arguments.of(makeCoordinate(1,2), makeCoordinate(2,4),
-						makeCoordinate(8,2), makeCoordinate(7,4))
+				Arguments.of(makeCoordinate(1,3), makeCoordinate(4,6),
+						makeCoordinate(8,3), makeCoordinate(5,6)),
+				Arguments.of(makeCoordinate(1,6), makeCoordinate(4,3),
+						makeCoordinate(8,6), makeCoordinate(5,3))
 				);
 	}
 	
@@ -233,24 +231,75 @@ class ChessPieceTests {
 	void bishopFalseMove(
 			Coordinate wfrom, Coordinate wto,
 			Coordinate bfrom, Coordinate bto) {
-		ChessPiece wp = factory.makePiece(WHITEKNIGHT);
-		ChessPiece bp = factory.makePiece(BLACKKNIGHT);
-		board.putPieceAt(factory.makePiece(BLACKKNIGHT), bto);
-		board.putPieceAt(factory.makePiece(WHITEKNIGHT), wto);
-		assertFalse(wp.canMove(wfrom, wto, board));
-		assertFalse(bp.canMove(bfrom, bto, board));
+		ChessPiece wb = factory.makePiece(WHITEBISHOP);
+		ChessPiece bb = factory.makePiece(BLACKBISHOP);
+		board.putPieceAt(factory.makePiece(BLACKBISHOP), bto);
+		board.putPieceAt(factory.makePiece(WHITEBISHOP), wto);
+		assertFalse(wb.canMove(wfrom, wto, board));
+		assertFalse(bb.canMove(bfrom, bto, board));
 	}
 	
 	static Stream<Arguments> bishopFailProvider() {
 		return Stream.of(
-				Arguments.of(makeCoordinate(1,2), makeCoordinate(2,3),
-						makeCoordinate(8,2), makeCoordinate(7,3)),
-				Arguments.of(makeCoordinate(1,2), makeCoordinate(2,4),
-						makeCoordinate(8,2), makeCoordinate(7,4))
+				Arguments.of(makeCoordinate(1,3), makeCoordinate(4,6),
+						makeCoordinate(8,3), makeCoordinate(5,6)),
+				Arguments.of(makeCoordinate(1,6), makeCoordinate(4,3),
+						makeCoordinate(8,6), makeCoordinate(5,3))
 				);
 	}
 	
+	@Test
+	void invalidDiagonal() {
+		ChessPiece wb = factory.makePiece(WHITEBISHOP);
+		assertFalse(wb.canMove(makeCoordinate(1,3),makeCoordinate(3,6), board));
+	}
+	
 	/** Rook Tests **/
+	@ParameterizedTest
+	@MethodSource("rookPassProvider")
+	void rookTrueMove(
+			Coordinate wfrom, Coordinate wto,
+			Coordinate bfrom, Coordinate bto) {
+		ChessPiece wr = factory.makePiece(WHITEROOK);
+		ChessPiece br = factory.makePiece(BLACKROOK);
+		board.putPieceAt(factory.makePiece(BLACKROOK), wto);
+		board.putPieceAt(factory.makePiece(WHITEROOK), bto);
+		assertTrue(wr.canMove(wfrom, wto, board));
+		assertTrue(br.canMove(bfrom, bto, board));
+	}
+	
+	static Stream<Arguments> rookPassProvider() {
+		return Stream.of(
+				Arguments.of(makeCoordinate(1,8), makeCoordinate(8,8),
+						makeCoordinate(1,8), makeCoordinate(1,1)),
+				Arguments.of(makeCoordinate(8,5), makeCoordinate(3,5),
+						makeCoordinate(1,1), makeCoordinate(1,7))
+				);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("rookFailProvider")
+	void rookFalseMove(
+			Coordinate wfrom, Coordinate wto,
+			Coordinate bfrom, Coordinate bto) {
+		ChessPiece wr = factory.makePiece(WHITEROOK);
+		ChessPiece br = factory.makePiece(BLACKROOK);
+		board.putPieceAt(factory.makePiece(BLACKROOK), bto);
+		board.putPieceAt(factory.makePiece(WHITEROOK), wto);
+		assertFalse(wr.canMove(wfrom, wto, board));
+		assertFalse(br.canMove(bfrom, bto, board));
+	}
+	
+	static Stream<Arguments> rookFailProvider() {
+		return Stream.of(
+				Arguments.of(makeCoordinate(1,8), makeCoordinate(8,8),
+						makeCoordinate(1,8), makeCoordinate(1,1)),
+				Arguments.of(makeCoordinate(8,5), makeCoordinate(3,5),
+						makeCoordinate(1,1), makeCoordinate(1,7))
+				);
+	}
+	
+	
 	/** King Tests **/
 	/** Queen Tests **/
 	/** Castling Tests **/

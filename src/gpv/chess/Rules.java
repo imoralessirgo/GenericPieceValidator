@@ -34,14 +34,29 @@ public class Rules {
 			Collections.addAll(pawnRules, moveForward1Space, moveForward2Space, moveToAttackPawn);
 			LinkedList<Rule> knightRules = new LinkedList<Rule>();
 			Collections.addAll(knightRules, validLShape);
+			LinkedList<Rule> bishopRules = new LinkedList<Rule>();
+			Collections.addAll(bishopRules, validDiagonalLine);
+			LinkedList<Rule> rookRules = new LinkedList<Rule>();
+			Collections.addAll(rookRules, validStraightLine);
+			LinkedList<Rule> queenRules = new LinkedList<Rule>();
+			Collections.addAll(queenRules, validStraightLine, validDiagonalLine);
+			LinkedList<Rule> kingRules = new LinkedList<Rule>();
+			Collections.addAll(kingRules, validStraightLine, validDiagonalLine);
+			
+			
 			
 			mapOfRules.put(ChessPieceDescriptor.WHITEPAWN, pawnRules);
 			mapOfRules.put(ChessPieceDescriptor.BLACKPAWN, pawnRules);
 			mapOfRules.put(ChessPieceDescriptor.WHITEKNIGHT, knightRules);
 			mapOfRules.put(ChessPieceDescriptor.BLACKKNIGHT, knightRules);
-			mapOfRules.put(ChessPieceDescriptor.WHITEBISHOP, knightRules);
-			mapOfRules.put(ChessPieceDescriptor.BLACKBISHOP, knightRules);
-			
+			mapOfRules.put(ChessPieceDescriptor.WHITEBISHOP, bishopRules);
+			mapOfRules.put(ChessPieceDescriptor.BLACKBISHOP, bishopRules);
+			mapOfRules.put(ChessPieceDescriptor.WHITEROOK, rookRules);
+			mapOfRules.put(ChessPieceDescriptor.BLACKROOK, rookRules);
+			mapOfRules.put(ChessPieceDescriptor.WHITEQUEEN, queenRules);
+			mapOfRules.put(ChessPieceDescriptor.BLACKQUEEN, queenRules);
+			mapOfRules.put(ChessPieceDescriptor.WHITEKING, kingRules);
+			mapOfRules.put(ChessPieceDescriptor.BLACKKING, kingRules);
 		}
 	
 		public HashMap<ChessPieceDescriptor, LinkedList<Rule>> getRules(){
@@ -55,7 +70,8 @@ public class Rules {
 		 * PAWN SPECIFIC
 		 */
 		static Rule moveForward1Space = (from, to, b, cp) ->  from.changeInX(to, cp) == 1 && from.changeInY(to, cp) == 0; 
-		static Rule moveForward2Space = (from, to, b, cp) -> from.changeInX(to, cp) == 2 && from.changeInY(to, cp) == 0 && !cp.hasMoved();
+		static Rule moveForward2Space = (from, to, b, cp) -> from.changeInX(to, cp) == 2 && from.changeInY(to, cp) == 0 
+																								&& !cp.hasMoved() && !isPieceInMyWayStraight(to, from, b);
 		static Rule moveToAttackPawn = (from, to, b, cp) -> singleSquareDiagonalPawn(to, from, cp)
 																&& b.getPieceAt(to) != null && isEnemyPiece(cp, to, b) ;
 		
@@ -70,7 +86,9 @@ public class Rules {
 		/**
 		 * MULTIPURPOSE RULES
 		 */
-		static Rule validLine = (from, to, b, cp) -> (b.getPieceAt(to) == null || isEnemyPiece(cp, to, b)) && !isPieceInMyWay(to,from,b);
+		static Rule validDiagonalLine = (from, to, b, cp) -> (b.getPieceAt(to) == null || isEnemyPiece(cp, to, b)) && !isPieceInMyWayDiagonal(to,from,b);
+		static Rule validStraightLine = (from, to, b, cp) -> (b.getPieceAt(to) == null || isEnemyPiece(cp, to, b)) && !isPieceInMyWayStraight(to,from,b);
+		
 		
 		
 		
@@ -85,20 +103,28 @@ public class Rules {
 			return pieceAtDest.getColor() != cp.getColor();
 		}
 		
-		private static boolean isPieceInMyWay(Coordinate to, Coordinate from, Board b) {
+		private static boolean isPieceInMyWayStraight(Coordinate to, Coordinate from, Board b) {
 			int[] distance = from.distanceToXY(to);
-			if(Arrays.asList(distance).contains(0)) { // straigt line
+			if(distance[0] == 0 || distance[1] == 0) { // straigt line
+				
 				if(distance[0] > 0){return checkNorth(from, to, b);} // North
 				else if(distance[0] < 0){return checkSouth(from, to, b);} // South
 				else if(distance[1] > 0){return checkEast(from, to, b);} // East
 				else if(distance[1] < 0){return checkWest(from, to, b);} // West
-			}else if(Math.abs(distance[0]) == Math.abs(distance[1])) { // valid diagonal
+			}
+			return true; // not a straight line
+		}
+		
+		
+		private static boolean isPieceInMyWayDiagonal(Coordinate to, Coordinate from, Board b) {
+			int[] distance = from.distanceToXY(to);
+			if(Math.abs(distance[0]) == Math.abs(distance[1])) { // valid diagonal
 				if(distance[0] > 0 && distance[1] > 0){return checkNorthEast(from, to, b);} // NorthEast
 				else if(distance[0] > 0 && distance[1] < 0){return checkNorthWest(from, to, b);} // NorthWest
 				else if(distance[0] < 0 && distance[1] > 0){return checkSouthEast(from, to, b);} // SouthEast
 				else if(distance[0] < 0 && distance[1] < 0){return checkSouthWest(from, to, b);} // SouthWest
 			}
-			return false;
+			return true; // found invalid diagonal
 		}
 		
 		private static boolean checkNorth(Coordinate from, Coordinate to, Board b) {
@@ -109,6 +135,7 @@ public class Rules {
 		}
 		
 		private static boolean checkSouth(Coordinate from, Coordinate to, Board b) {
+			System.out.println("here");
 			for(int i = from.getRow() - 1; i > to.getRow() + 1; i--) {
 				if(b.getPieceAt(makeCoordinate(i,from.getColumn())) != null) {return true;}
 			}
