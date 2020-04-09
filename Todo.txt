@@ -7,7 +7,7 @@ whitepawn
 (2,2).changeinX(1,2) : -1
 (2,2).changeinX(3,2) : 1
 
-blackpawn 
+blackpawn import gpv.util.*;
 (7,2).changeinX(8,2) : -1
 (7,2).changeinX(6,2) : 1
  
@@ -29,7 +29,7 @@ horizontalMove:
  verticalMove:
  	(1,1).distanceTo(2,1) : [1,0]
  	(8,8).distanceTo(7,8) : [-1,0]
- diagonalMove:
+ diagonalMove:import gpv.util.*;
  	(1,1).distanceTo(2,2) : [1,1]
  	(8,8).distanceTo(7,7) : [-1,-1]
 LMove 
